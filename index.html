@@ -15,7 +15,7 @@ body { background:#000; overflow:hidden; font-family:'Courier New',monospace; }
 /* ===== OFFICE BACKGROUND ===== */
 #office-bg {
   position:absolute; inset:0;
-  background:url('images/office-open.png') center/cover no-repeat;
+  background:url('images/office-open.jpg') center/cover no-repeat;
   transition:background-image 0.3s;
 }
 
@@ -426,7 +426,7 @@ body { background:#000; overflow:hidden; font-family:'Courier New',monospace; }
       </div>
     </div>
     <div style="flex:1;display:flex;align-items:center;justify-content:center;height:100%;">
-      <img src="images/logo-side.png" style="max-width:110%;max-height:99%;object-fit:contain;">
+      <img src="images/logo-side.jpg" style="max-width:110%;max-height:99%;object-fit:contain;">
     </div>
   </div>
 
@@ -447,7 +447,7 @@ body { background:#000; overflow:hidden; font-family:'Courier New',monospace; }
       </div>
       <div style="text-align:center;">
         <div style="font-size:20px;margin-bottom:15px;">长崎素世</div>
-        <img src="images/soyo-thumb.png" style="width:120px;height:120px;object-fit:cover;border:3px solid #444;">
+        <img src="images/soyo-thumb.jpg" style="width:120px;height:120px;object-fit:cover;border:3px solid #444;">
         <div style="margin-top:15px;font-size:16px;">A.I Level</div>
         <div style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;">
           <button onclick="adjustAI('soyo',-1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#60;</button>
@@ -457,7 +457,7 @@ body { background:#000; overflow:hidden; font-family:'Courier New',monospace; }
       </div>
       <div style="text-align:center;">
         <div style="font-size:20px;margin-bottom:15px;">千早爱音</div>
-        <img src="images/anon-thumb.png" style="width:120px;height:120px;object-fit:cover;border:3px solid #444;">
+        <img src="images/anon-thumb.jpg" style="width:120px;height:120px;object-fit:cover;border:3px solid #444;">
         <div style="margin-top:15px;font-size:16px;">A.I Level</div>
         <div style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;">
           <button onclick="adjustAI('anon',-1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#60;</button>
@@ -510,8 +510,8 @@ let anonRunning = false;      // stage4 footstep loop active
 
 // Characters: position 0=stage, 1=hall near stage, 2=hall near office, 3=at door
 const chars = {
-  tomori: { pos:0, path:'images/tomori-idle.png', scare:'images/tomori-attack.png', name:'高松灯', side:'L', active:true },
-  soyo:   { pos:0, path:'images/soyo-idle.png',  scare:'images/soyo-attack.jpg', name:'长崎素世', side:'R', active:true },
+  tomori: { pos:0, path:'images/tomori-idle.jpg', scare:'images/tomori-attack.jpg', name:'高松灯', side:'L', active:true },
+  soyo:   { pos:0, path:'images/soyo-idle.jpg',  scare:'images/soyo-attack.jpg', name:'长崎素世', side:'R', active:true },
   anon:   { pos:0, path:'images/anon-idle.jpg', scare:'images/anon-attack.jpg',  name:'千早爱音', side:'L', active:true },
   taki:   { pos:0, path:'images/anon-idle.jpg', scare:'images/anon-attack.jpg',  name:'千早爱音', side:'L', active:false }
 };
@@ -587,7 +587,7 @@ function playJumpscareSound() {
   lfo2Gain.connect(scr2.frequency);
   const s2Gain = audioCtx.createGain();
   s2Gain.gain.setValueAtTime(0.4, t);
-  s2Gain.gain.exponentialRampToValueAtTime(0.01, t+1.5);
+  s2Gain.exponentialRampToValueAtTime(0.01, t+1.5);
   scr2.connect(s2Gain).connect(audioCtx.destination);
   scr2.start(t); scr2.stop(t+1.6);
   lfo2.start(t); lfo2.stop(t+1.6);
@@ -860,12 +860,12 @@ function updateDoors() {
   if (lightL || lightR) {
     const atL = (chars.tomori.pos === 3) && !doorL;
     const atR = (chars.soyo.pos === 4) && !doorR;
-    if (atL && atR) img = 'images/office-lit-both.png';
-    else if (atL) img = 'images/office-lit-tomori.png';
-    else if (atR) img = 'images/office-lit-soyo.png';
-    else img = `images/office-${state}-lit.png`;
+    if (atL && atR) img = 'images/office-lit-both.jpg';
+    else if (atL) img = 'images/office-lit-tomori.jpg';
+    else if (atR) img = 'images/office-lit-soyo.jpg';
+    else img = `images/office-${state}-lit.jpg`;
   } else {
-    img = `images/office-${state}.png`;
+    img = `images/office-${state}.jpg`;
   }
   bg.style.backgroundImage = `url('${img}')`;
   const bld = document.getElementById('btn-Ldoor');
@@ -1219,7 +1219,7 @@ function playSecret() {
   const sc = document.getElementById('jumpscare');
   sc.style.background = '#000';
   sc.innerHTML = '<div style="display:flex;gap:20px;align-items:center;justify-content:center;width:100%;height:100%;">'
-    + '<img src="images/tomori-attack.png" style="max-height:80vh;">'
+    + '<img src="images/tomori-attack.jpg" style="max-height:80vh;">'
     + '<img src="images/soyo-attack.jpg" style="max-height:80vh;">'
     + '<img src="images/anon-attack.jpg" style="max-height:80vh;">'
     + '</div>';
