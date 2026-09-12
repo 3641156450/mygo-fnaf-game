@@ -6,1365 +6,190 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; user-select:none; }
 body { background:#000; overflow:hidden; font-family:'Courier New',monospace; }
-
-#game {
-  position:relative; width:100vw; height:100vh;
-  background:#000;
-}
-
-/* ===== OFFICE BACKGROUND ===== */
-#office-bg {
-  position:absolute; inset:0;
-  background:url('images/office-open.jpg') center/cover no-repeat;
-  transition:background-image 0.3s;
-}
-
-/* ===== CONTROL BUTTONS (anime style) ===== */
-.ctrl {
-  position:absolute;
-  background:rgba(40,50,40,0.85);
-  border:2px solid #6a7a6a;
-  border-radius:6px;
-  color:#e8f0e8; font-size:13px;
-  padding:8px 14px;
-  cursor:pointer;
-  z-index:10;
-  user-select:none;
-  text-align:center;
-  box-shadow:0 2px 8px rgba(0,0,0,0.5);
-}
+#game { position:relative; width:100vw; height:100vh; background:#000; }
+#office-bg { position:absolute; inset:0; background:url('images/office-open.png') center/cover no-repeat; transition:background-image 0.3s; }
+.ctrl { position:absolute; background:rgba(40,50,40,0.85); border:2px solid #6a7a6a; border-radius:6px; color:#e8f0e8; font-size:13px; padding:8px 14px; cursor:pointer; z-index:10; user-select:none; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.5); }
 .ctrl:hover { border-color:#a0b8a0; background:rgba(60,75,60,0.9); }
 .ctrl.active { background:rgba(100,130,100,0.9); border-color:#c0d8c0; }
-#btn-Ldoor { left:2%; top:45%; }
-#btn-Llight { left:2%; top:58%; }
-#btn-Rdoor { right:2%; top:45%; }
-#btn-Rlight { right:2%; top:58%; }
+#btn-Ldoor { left:2%; top:45%; } #btn-Llight { left:2%; top:58%; }
+#btn-Rdoor { right:2%; top:45%; } #btn-Rlight { right:2%; top:58%; }
 #btn-cam { bottom:3%; left:50%; transform:translateX(-50%); width:30%; height:30px; display:flex; align-items:center; justify-content:center; }
-
-/* ===== WINDOWS (next to doors) ===== */
-.window {
-  position:absolute; top:15%; height:55%; width:10%;
-  z-index:3; overflow:hidden;
-  background:#050505;
-  border:2px solid #333;
-}
+.window { position:absolute; top:15%; height:55%; width:10%; z-index:3; overflow:hidden; background:#050505; border:2px solid #333; }
 #window-L { left:16%; transform:perspective(400px) rotateY(5deg); }
 #window-R { right:16%; transform:perspective(400px) rotateY(-5deg); }
-.window.lit {
-  background:radial-gradient(ellipse at 50% 30%, #ffdd99 0%, #bb7744 50%, #221100 100%);
-}
-.window img {
-  position:absolute; bottom:0; left:50%;
-  transform:translateX(-50%);
-  max-height:90%; max-width:95%;
-  opacity:0; transition:opacity 0.2s;
-}
+.window.lit { background:radial-gradient(ellipse at 50% 30%, #ffdd99 0%, #bb7744 50%, #221100 100%); }
+.window img { position:absolute; bottom:0; left:50%; transform:translateX(-50%); max-height:90%; max-width:95%; opacity:0; transition:opacity 0.2s; }
 .window img.visible { opacity:1; }
-
-/* ===== CONTROL BUTTONS ===== */
-.ctrl {
-  position:absolute; z-index:10;
-  width:55px; height:55px;
-  background:linear-gradient(180deg,#222,#111);
-  border:2px solid #555;
-  border-radius:4px;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  cursor:pointer;
-  font-size:9px; color:#888;
-  font-family:Arial,sans-serif;
-  transition:background 0.1s, border-color 0.1s;
-}
-.ctrl:hover { border-color:#888; }
-.ctrl.active { background:linear-gradient(180deg,#444,#222); border-color:#aaa; }
+.ctrl { position:absolute; z-index:10; width:55px; height:55px; background:linear-gradient(180deg,#222,#111); border:2px solid #555; border-radius:4px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; font-size:9px; color:#888; font-family:Arial,sans-serif; transition:background 0.1s, border-color 0.1s; }
+.ctrl:hover { border-color:#888; } .ctrl.active { background:linear-gradient(180deg,#444,#222); border-color:#aaa; }
 .ctrl .icon { font-size:20px; margin-bottom:2px; }
-
-#btn-Llight { left:1%; top:55%; }
-#btn-Ldoor  { left:1%; top:72%; }
-#btn-Rlight { right:1%; top:55%; }
-#btn-Rdoor  { right:1%; top:72%; }
-#btn-cam {
-  bottom:3%; left:50%; transform:translateX(-50%);
-  width:30%; height:30px;
-  background:rgba(30,30,30,0.9);
-  border:1px solid #555;
-  color:#fff; font-size:14px;
-  display:flex; align-items:center; justify-content:center;
-}
+#btn-Llight { left:1%; top:55%; } #btn-Ldoor { left:1%; top:72%; }
+#btn-Rlight { right:1%; top:55%; } #btn-Rdoor { right:1%; top:72%; }
+#btn-cam { bottom:3%; left:50%; transform:translateX(-50%); width:30%; height:30px; background:rgba(30,30,30,0.9); border:1px solid #555; color:#fff; font-size:14px; display:flex; align-items:center; justify-content:center; }
 #btn-cam:hover { border-color:#fff; }
-
-/* door light indicator */
-.door-ind {
-  position:absolute; width:15px; height:15px;
-  border-radius:50%; top:4%; left:50%; transform:translateX(-50%);
-  background:#333; transition:background 0.2s;
-}
+.door-ind { position:absolute; width:15px; height:15px; border-radius:50%; top:4%; left:50%; transform:translateX(-50%); background:#333; transition:background 0.2s; }
 .door-ind.closed { background:#0f0; box-shadow:0 0 8px #0f0; }
-
-/* ===== TIME DISPLAY ===== */
-#time-display {
-  position:absolute; top:2%; right:3%;
-  color:#fff; font-size:32px; font-weight:bold;
-  text-align:right; z-index:10;
-  text-shadow:0 0 10px rgba(255,255,255,0.3);
-}
+#time-display { position:absolute; top:2%; right:3%; color:#fff; font-size:32px; font-weight:bold; text-align:right; z-index:10; text-shadow:0 0 10px rgba(255,255,255,0.3); }
 #time-display .night { font-size:16px; color:#aaa; font-weight:normal; }
-
-/* ===== POWER ===== */
-#power-display {
-  position:absolute; bottom:2%; left:2%;
-  color:#0f0; font-size:14px; z-index:10;
-  text-shadow:0 0 5px #0f0;
-}
-
-/* ===== CAM SYSTEM ===== */
-#cam-overlay {
-  position:absolute; inset:0; z-index:20;
-  background:#000; display:none;
-}
+#power-display { position:absolute; bottom:2%; left:2%; color:#0f0; font-size:14px; z-index:10; text-shadow:0 0 5px #0f0; }
+#cam-overlay { position:absolute; inset:0; z-index:20; background:#000; display:none; }
 #cam-overlay.show { display:block; }
-
-#cam-view {
-  position:absolute; inset:0;
-  background:#000;
-}
-#cam-feed {
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:center;
-}
+#cam-view { position:absolute; inset:0; background:#000; }
+#cam-feed { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
 #cam-feed img { max-width:100%; max-height:100%; }
-#cam-feed .cam-label {
-  position:absolute; bottom:5%; left:5%;
-  color:#0f0; font-size:18px; text-shadow:0 0 5px #0f0;
-}
-
-/* static noise on cam */
-#cam-feed::before {
-  content:''; position:absolute; inset:0;
-  background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(255,255,255,0.03) 2px,rgba(255,255,255,0.03) 4px);
-  pointer-events:none;
-}
-
-#cam-map {
-  position:absolute; top:10px; right:10px;
-  width:280px; height:340px;
-  background:rgba(0,0,0,0.9);
-  border:1px solid #444;
-  padding:10px;
-}
+#cam-feed .cam-label { position:absolute; bottom:5%; left:5%; color:#0f0; font-size:18px; text-shadow:0 0 5px #0f0; }
+#cam-feed::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(255,255,255,0.03) 2px,rgba(255,255,255,0.03) 4px); pointer-events:none; }
+#cam-map { position:absolute; top:10px; right:10px; width:280px; height:340px; background:rgba(0,0,0,0.9); border:1px solid #444; padding:10px; }
 #cam-map h3 { color:#fff; text-align:center; margin-bottom:15px; font-size:18px; }
-
-.cam-node {
-  position:absolute;
-  padding:2px 5px;
-  background:rgba(40,40,40,0.9);
-  border:1px solid #555;
-  color:#aaa; font-size:9px;
-  cursor:pointer;
-  transition:all 0.15s;
-}
+.cam-node { position:absolute; padding:2px 5px; background:rgba(40,40,40,0.9); border:1px solid #555; color:#aaa; font-size:9px; cursor:pointer; transition:all 0.15s; }
 .cam-node:hover { border-color:#fff; color:#fff; }
 .cam-node.current { background:rgba(200,200,0,0.3); border-color:#ff0; color:#ff0; }
-
-/* cam connection lines */
 .cam-line { position:absolute; background:#444; z-index:0; }
-
-#cam-close {
-  position:absolute; bottom:5%; left:50%; transform:translateX(-50%);
-  width:30%; height:30px;
-  background:rgba(30,30,30,0.9);
-  border:1px solid #555;
-  color:#fff; font-size:14px;
-  cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  z-index:25;
-}
+#cam-close { position:absolute; bottom:5%; left:50%; transform:translateX(-50%); width:30%; height:30px; background:rgba(30,30,30,0.9); border:1px solid #555; color:#fff; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:25; }
 #cam-close:hover { border-color:#fff; }
-
-/* static snow screen when char leaves */
-#cam-feed.snow {
-  background:#000 !important;
-}
-#cam-feed.snow::before {
-  content:''; position:absolute; inset:0;
-  background:
-    repeating-linear-gradient(0deg,
-      rgba(255,255,255,0.15) 0px,
-      rgba(255,255,255,0.15) 1px,
-      transparent 1px,
-      transparent 3px);
-  z-index:15; pointer-events:none;
-}
-#cam-feed.snow::after {
-  content:''; position:absolute; inset:0;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0px, transparent 1px),
-    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.3) 0px, transparent 1px),
-    radial-gradient(circle at 40% 80%, rgba(255,255,255,0.35) 0px, transparent 1px),
-    radial-gradient(circle at 90% 20%, rgba(255,255,255,0.3) 0px, transparent 1px);
-  background-size:8px 8px, 12px 12px, 10px 10px, 14px 14px;
-  animation:snowMove 0.2s steps(4) infinite;
-  z-index:16; pointer-events:none;
-}
-@keyframes snowMove {
-  0% { background-position:0 0, 4px 2px, 2px 6px, 6px 0; }
-  25% { background-position:3px 5px, 0 7px, 5px 1px, 1px 4px; }
-  50% { background-position:6px 2px, 3px 0, 0 4px, 5px 7px; }
-  75% { background-position:1px 6px, 6px 3px, 3px 0, 0 2px; }
-  100% { background-position:0 0, 4px 2px, 2px 6px, 6px 0; }
-}
-
-#cam-red-dot {
-  position:absolute; top:2%; left:2%;
-  width:15px; height:15px; border-radius:50%;
-  background:red; box-shadow:0 0 8px red;
-  animation:blink 1s infinite;
-}
+#cam-feed.snow { background:#000 !important; }
+#cam-feed.snow::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(0deg,rgba(255,255,255,0.15) 0px,rgba(255,255,255,0.15) 1px,transparent 1px,transparent 3px); z-index:15; pointer-events:none; }
+#cam-feed.snow::after { content:''; position:absolute; inset:0; background-image:radial-gradient(circle at 20% 30%,rgba(255,255,255,0.4) 0px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(255,255,255,0.3) 0px,transparent 1px),radial-gradient(circle at 40% 80%,rgba(255,255,255,0.35) 0px,transparent 1px),radial-gradient(circle at 90% 20%,rgba(255,255,255,0.3) 0px,transparent 1px); background-size:8px 8px,12px 12px,10px 10px,14px 14px; animation:snowMove 0.2s steps(4) infinite; z-index:16; pointer-events:none; }
+@keyframes snowMove { 0%{background-position:0 0,4px 2px,2px 6px,6px 0} 25%{background-position:3px 5px,0 7px,5px 1px,1px 4px} 50%{background-position:6px 2px,3px 0,0 4px,5px 7px} 75%{background-position:1px 6px,6px 3px,3px 0,0 2px} 100%{background-position:0 0,4px 2px,2px 6px,6px 0} }
+#cam-red-dot { position:absolute; top:2%; left:2%; width:15px; height:15px; border-radius:50%; background:red; box-shadow:0 0 8px red; animation:blink 1s infinite; }
 @keyframes blink { 50% { opacity:0.3; } }
-
-/* ===== CRT EFFECT ===== */
-#crt {
-  position:absolute; inset:0; z-index:30;
-  pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);
-}
-#crt::after {
-  content:''; position:absolute; inset:0;
-  background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,0.6) 100%);
-}
-#crt-noise {
-  position:absolute; inset:0; z-index:31;
-  pointer-events:none; opacity:0.08;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation:noise 0.2s infinite;
-}
-@keyframes noise {
-  0% { background-position:0 0; }
-  25% { background-position:-50px 30px; }
-  50% { background-position:30px -40px; }
-  75% { background-position:-20px -20px; }
-}
-
-/* ===== JUMPSCARE ===== */
-#jumpscare {
-  position:absolute; inset:0; z-index:200;
-  display:none; align-items:center; justify-content:center;
-  background:#000;
-}
+#crt { position:absolute; inset:0; z-index:30; pointer-events:none; background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px); }
+#crt::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,0.6) 100%); }
+#crt-noise { position:absolute; inset:0; z-index:31; pointer-events:none; opacity:0.08; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation:noise 0.2s infinite; }
+@keyframes noise { 0%{background-position:0 0} 25%{background-position:-50px 30px} 50%{background-position:30px -40px} 75%{background-position:-20px -20px} }
+#jumpscare { position:absolute; inset:0; z-index:200; display:none; align-items:center; justify-content:center; background:#000; }
 #jumpscare.show { display:flex; animation:scare 0.1s infinite; }
-#jumpscare img {
-  max-width:90%; max-height:90%;
-  animation:scareZoom 0.15s ease-out;
-}
-@keyframes scareZoom {
-  from { transform:scale(0.3); }
-  to { transform:scale(1.2); }
-}
-@keyframes scare {
-  0%,100% { transform:translate(0,0); }
-  25% { transform:translate(-10px,5px); }
-  50% { transform:translate(8px,-8px); }
-  75% { transform:translate(-5px,-3px); }
-}
-
-/* ===== GAME OVER / VICTORY ===== */
-#end-screen {
-  position:absolute; inset:0; z-index:110;
-  display:none; flex-direction:column;
-  align-items:center; justify-content:center;
-  background:#000; color:#fff;
-}
+#jumpscare img { max-width:90%; max-height:90%; animation:scareZoom 0.15s ease-out; }
+@keyframes scareZoom { from{transform:scale(0.3)} to{transform:scale(1.2)} }
+@keyframes scare { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-10px,5px)} 50%{transform:translate(8px,-8px)} 75%{transform:translate(-5px,-3px)} }
+#end-screen { position:absolute; inset:0; z-index:110; display:none; flex-direction:column; align-items:center; justify-content:center; background:#000; color:#fff; }
 #end-screen.show { display:flex; }
 #end-screen h1 { font-size:60px; margin-bottom:20px; letter-spacing:8px; }
 #end-screen.gameover h1 { color:#c00; text-shadow:0 0 30px #f00; }
 #end-screen.victory h1 { color:#fc0; text-shadow:0 0 30px #fa0; }
 #end-screen p { font-size:18px; margin:5px 0; color:#aaa; }
-#end-screen .retry {
-  margin-top:40px; padding:15px 50px;
-  border:2px solid #c00; color:#c00;
-  font-size:20px; cursor:pointer;
-  background:transparent;
-  font-family:'Courier New',monospace;
-}
+#end-screen .retry { margin-top:40px; padding:15px 50px; border:2px solid #c00; color:#c00; font-size:20px; cursor:pointer; background:transparent; font-family:'Courier New',monospace; }
 #end-screen .retry:hover { background:#c00; color:#000; }
-
-/* ===== START MENU ===== */
-#start-menu {
-  position:absolute; inset:0; z-index:120;
-  display:none; flex-direction:row;
-  align-items:center; justify-content:center;
-  background:#000; color:#fff;
-}
+#start-menu { position:absolute; inset:0; z-index:120; display:none; flex-direction:row; align-items:center; justify-content:center; background:#000; color:#fff; }
 #start-menu.show { display:flex; }
-#start-menu h1 {
-  font-size:42px; color:#fff; text-align:center;
-  line-height:1.3; margin-bottom:40px;
-  text-shadow:0 0 20px rgba(255,255,255,0.2);
-}
-#start-menu button {
-  padding:12px 40px; margin:8px;
-  background:transparent; border:none; color:#fff;
-  font-size:24px; cursor:pointer;
-  font-family:'Courier New',monospace;
-}
+#start-menu h1 { font-size:42px; color:#fff; text-align:center; line-height:1.3; margin-bottom:40px; text-shadow:0 0 20px rgba(255,255,255,0.2); }
+#start-menu button { padding:12px 40px; margin:8px; background:transparent; border:none; color:#fff; font-size:24px; cursor:pointer; font-family:'Courier New',monospace; }
 #start-menu button:hover { color:#fc0; text-shadow:0 0 10px #fc0; }
-
-/* scare preview chars */
-.preview-char {
-  display:flex; flex-direction:column; align-items:center;
-  cursor:pointer; transition:transform 0.2s;
-}
+.preview-char { display:flex; flex-direction:column; align-items:center; cursor:pointer; transition:transform 0.2s; }
 .preview-char:hover { transform:scale(1.15); }
-.preview-char img {
-  width:80px; height:80px; object-fit:cover;
-  border-radius:50%; border:2px solid #555;
-}
-.preview-char span {
-  margin-top:5px; font-size:12px; color:#aaa;
-}
-
-/* warning screen */
-#warning {
-  position:absolute; inset:0; z-index:125;
-  display:none; flex-direction:column;
-  align-items:center; justify-content:center;
-  background:#000; color:#ccc;
-}
+.preview-char img { width:80px; height:80px; object-fit:cover; border-radius:50%; border:2px solid #555; }
+.preview-char span { margin-top:5px; font-size:12px; color:#aaa; }
+#warning { position:absolute; inset:0; z-index:125; display:none; flex-direction:column; align-items:center; justify-content:center; background:#000; color:#ccc; }
 #warning.show { display:flex; }
 #warning h2 { font-size:28px; margin-bottom:20px; }
 #warning p { font-size:20px; text-align:center; max-width:600px; line-height:1.5; }
-
-/* ===== TIME BANNER ===== */
-#time-banner {
-  position:absolute; top:40%; left:50%;
-  transform:translate(-50%,-50%);
-  font-size:72px; color:#fff;
-  z-index:40; pointer-events:none;
-  opacity:0; transition:opacity 0.5s;
-  letter-spacing:10px;
-  text-shadow:0 0 20px rgba(255,255,255,0.3);
-}
+#time-banner { position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:72px; color:#fff; z-index:40; pointer-events:none; opacity:0; transition:opacity 0.5s; letter-spacing:10px; text-shadow:0 0 20px rgba(255,255,255,0.3); }
 #time-banner.show { opacity:1; }
-
-/* ===== fan animation ===== */
-#fan-spin {
-  position:absolute; bottom:28%; left:48%;
-  width:80px; height:80px;
-  background:conic-gradient(from 0deg, #333 0deg, #555 30deg, #333 60deg, #555 90deg, #333 120deg, #555 150deg, #333 180deg, #555 210deg, #333 240deg, #555 270deg, #333 300deg, #555 330deg);
-  border-radius:50%;
-  animation:spin 0.3s linear infinite;
-  opacity:0.7;
-}
+#fan-spin { position:absolute; bottom:28%; left:48%; width:80px; height:80px; background:conic-gradient(from 0deg,#333 0deg,#555 30deg,#333 60deg,#555 90deg,#333 120deg,#555 150deg,#333 180deg,#555 210deg,#333 240deg,#555 270deg,#333 300deg,#555 330deg); border-radius:50%; animation:spin 0.3s linear infinite; opacity:0.7; }
 @keyframes spin { to { transform:rotate(360deg); } }
 </style>
 </head>
 <body>
 <div id="game">
-  <!-- Office background -->
-  <div id="office-bg"></div>
-
-  <!-- Control buttons -->
-  <div class="ctrl" id="btn-Ldoor">门</div>
-  <div class="ctrl" id="btn-Llight">灯</div>
-  <div class="ctrl" id="btn-Rdoor">门</div>
-  <div class="ctrl" id="btn-Rlight">灯</div>
-  <div class="ctrl" id="btn-cam">▼ CAMS</div>
-
-  <!-- Time -->
-  <div id="time-display">12 AM<br><span class="night">Night 1</span></div>
-
-  <!-- Power -->
-  <div id="power-display">POWER: ∞ INFINITE</div>
-
-  <!-- Time banner -->
-  <div id="time-banner">12:00 AM</div>
-
-  <!-- CAM overlay -->
-  <div id="cam-overlay">
-    <div id="cam-red-dot"></div>
-    <div id="cam-view">
-      <div id="cam-feed">
-        <div class="cam-label" id="cam-label">CAM 1A</div>
-      </div>
-    </div>
-    <div id="cam-map">
-      <h3>CAMERA</h3>
-      <!-- nodes positioned by JS -->
-    </div>
-    <div id="cam-close">▼ CAMS</div>
-  </div>
-
-  <!-- Jumpscare -->
-  <div id="jumpscare"><img src="" alt=""></div>
-
-  <!-- End screen -->
-  <div id="end-screen">
-    <h1>GAME OVER</h1>
-    <p id="end-msg"></p>
-    <p id="end-time"></p>
-    <button class="retry" onclick="startGame(currentNight)">▶ RETRY</button>
-    <button class="retry" id="next-night-btn" style="margin-top:10px;background:#080;" onclick="startGame(currentNight+1)">▶ NEXT NIGHT</button>
-    <button class="retry" style="margin-top:10px;background:#333;" onclick="backToMenu()">🏠 MAIN MENU</button>
-  </div>
-
-  <!-- Warning -->
-  <div id="warning">
-    <h2>WARNING!</h2>
-    <p>This game contains flashing lights, loud noises,<br>and lots of jumpscares!</p>
-    <p style="color:#888;font-size:14px;">本游戏包含闪烁灯光、巨大噪音和大量跳杀！</p>
-  </div>
-
-  <!-- Start menu -->
-  <div id="start-menu" style="width:100%;height:100%;">
-    <div style="flex:1;padding-left:80px;text-align:left;display:flex;flex-direction:column;justify-content:center;">
-      <h1 style="font-size:36px;margin-bottom:40px;">MyGO!!!!!<br>深夜警备 ★★</h1>
-      <div style="display:flex;flex-direction:column;gap:12px;">
-        <button onclick="startGame(1)">开始游戏</button>
-        <button onclick="showLevelSelect()">选择关卡</button>
-        <button onclick="startGame(6)">开始第六晚</button>
-        <button onclick="showCustomNight()">自定义之夜</button>
-      </div>
-    </div>
-    <div style="flex:1;display:flex;align-items:center;justify-content:center;height:100%;">
-      <img src="images/logo-side.jpg" style="max-width:110%;max-height:99%;object-fit:contain;">
-    </div>
-  </div>
-
-  <!-- Custom Night -->
-  <div id="custom-night" style="position:absolute;inset:0;background:#000;z-index:140;display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;">
-    <button onclick="hideCustomNight()" style="position:absolute;left:30px;top:30px;background:#555;border:none;color:#fff;font-size:20px;padding:8px 20px;cursor:pointer;">Back</button>
-    <h2 style="font-size:36px;margin-bottom:50px;font-weight:normal;">自定义之夜</h2>
-    <div style="display:flex;gap:50px;">
-      <div style="text-align:center;">
-        <div style="font-size:20px;margin-bottom:15px;">高松灯</div>
-        <img src="images/tomori-thumb.jpg" style="width:120px;height:120px;object-fit:cover;border:3px solid #444;">
-        <div style="margin-top:15px;font-size:16px;">A.I Level</div>
-        <div style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;">
-          <button onclick="adjustAI('tomori',-1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#60;</button>
-          <span id="ai-tomori" style="font-size:24px;min-width:40px;text-align:center;">10</span>
-          <button onclick="adjustAI('tomori',1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#62;</button>
-        </div>
-      </div>
-      <div style="text-align:center;">
-        <div style="font-size:20px;margin-bottom:15px;">长崎素世</div>
-        <img src="images/soyo-thumb.jpg" style="width:120px;height:120px;object-fit:cover;border:3px solid #444;">
-        <div style="margin-top:15px;font-size:16px;">A.I Level</div>
-        <div style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;">
-          <button onclick="adjustAI('soyo',-1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#60;</button>
-          <span id="ai-soyo" style="font-size:24px;min-width:40px;text-align:center;">10</span>
-          <button onclick="adjustAI('soyo',1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#62;</button>
-        </div>
-      </div>
-      <div style="text-align:center;">
-        <div style="font-size:20px;margin-bottom:15px;">千早爱音</div>
-        <img src="images/anon-thumb.jpg" style="width:120px;height:120px;object-fit:cover;border:3px solid #444;">
-        <div style="margin-top:15px;font-size:16px;">A.I Level</div>
-        <div style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;">
-          <button onclick="adjustAI('anon',-1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#60;</button>
-          <span id="ai-anon" style="font-size:24px;min-width:40px;text-align:center;">10</span>
-          <button onclick="adjustAI('anon',1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#62;</button>
-        </div>
-      </div>
-    </div>
-    <div style="margin-top:40px;color:#666;font-size:14px;">(0-2)简单&nbsp;&nbsp;(3-6)普通&nbsp;&nbsp;(7-12)困难&nbsp;&nbsp;(13-20)极难</div>
-    <button onclick="startCustomNight()" style="position:absolute;right:40px;bottom:40px;background:#888;border:none;color:#000;font-size:24px;padding:12px 30px;cursor:pointer;font-weight:bold;">READY</button>
-  </div>
-
-  <!-- Level select -->
-  <div id="level-select" style="position:absolute;inset:0;background:#000;z-index:130;display:none;flex-direction:column;align-items:center;justify-content:center;">
-    <h2 style="font-size:32px;margin-bottom:40px;color:#fff;font-weight:normal;border:none;background:none;">选择哪一晚</h2>
-    <div style="display:flex;gap:30px;margin-bottom:60px;">
-      <button onclick="startGame(1)" style="font-size:18px;border:none;background:none;color:#fff;cursor:pointer;padding:8px 16px;">第一晚</button>
-      <button onclick="startGame(2)" style="font-size:18px;border:none;background:none;color:#fff;cursor:pointer;padding:8px 16px;">第二晚</button>
-      <button onclick="startGame(3)" style="font-size:18px;border:none;background:none;color:#fff;cursor:pointer;padding:8px 16px;">第三晚</button>
-      <button onclick="startGame(4)" style="font-size:18px;border:none;background:none;color:#fff;cursor:pointer;padding:8px 16px;">第四晚</button>
-      <button onclick="startGame(5)" style="font-size:18px;border:none;background:none;color:#fff;cursor:pointer;padding:8px 16px;">第五晚</button>
-    </div>
-    <button onclick="hideLevelSelect()" style="position:absolute;left:40px;bottom:40px;background:none;border:none;color:#888;font-size:16px;cursor:pointer;">返回</button>
-  </div>
-
-  <!-- CRT effects -->
-  <div id="crt"></div>
-  <div id="crt-noise"></div>
-
-  <!-- Menu music -->
-  <audio id="menu-music" src="sound/menu-music.mp3" loop autoplay preload="auto"></audio>
+<div id="office-bg"></div>
+<div class="ctrl" id="btn-Ldoor">门</div>
+<div class="ctrl" id="btn-Llight">灯</div>
+<div class="ctrl" id="btn-Rdoor">门</div>
+<div class="ctrl" id="btn-Rlight">灯</div>
+<div class="ctrl" id="btn-cam">▼ CAMS</div>
+<div id="time-display">12 AM<br><span class="night">Night 1</span></div>
+<div id="power-display">POWER: ∞ INFINITE</div>
+<div id="time-banner">12:00 AM</div>
+<div id="cam-overlay"><div id="cam-red-dot"></div><div id="cam-view"><div id="cam-feed"><div class="cam-label" id="cam-label">CAM 1A</div></div></div><div id="cam-map"><h3>CAMERA</h3></div><div id="cam-close">▼ CAMS</div></div>
+<div id="jumpscare"><img src="" alt=""></div>
+<div id="end-screen"><h1>GAME OVER</h1><p id="end-msg"></p><p id="end-time"></p><button class="retry" onclick="startGame(currentNight)">▶ RETRY</button><button class="retry" id="next-night-btn" style="margin-top:10px;background:#080;" onclick="startGame(currentNight+1)">▶ NEXT NIGHT</button><button class="retry" style="margin-top:10px;background:#333;" onclick="backToMenu()">🏠 MAIN MENU</button></div>
+<div id="warning"><h2>WARNING!</h2><p>This game contains flashing lights, loud noises,<br>and lots of jumpscares!</p><p style="color:#888;font-size:14px;">本游戏包含闪烁灯光、巨大噪音和大量跳杀！</p></div>
+<div id="start-menu" style="width:100%;height:100%;">
+<div style="flex:1;padding-left:80px;text-align:left;display:flex;flex-direction:column;justify-content:center;">
+<h1 style="font-size:36px;margin-bottom:40px;">MyGO!!!!!<br>深夜警备 ★★</h1>
+<div style="display:flex;flex-direction:column;gap:12px;">
+<button onclick="startGame(1)">开始游戏</button>
+<button onclick="showLevelSelect()">选择关卡</button>
+<button onclick="startGame(6)">开始第六晚</button>
+<button onclick="showCustomNight()">自定义之夜</button>
+</div></div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center;height:100%;">
+<img src="images/logo-side.png" style="max-width:110%;max-height:99%;object-fit:contain;">
+</div></div>
+<div id="custom-night" style="position:absolute;inset:0;background:#000;z-index:140;display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;">
+<button onclick="hideCustomNight()" style="position:absolute;left:30px;top:30px;background:#555;border:none;color:#fff;font-size:20px;padding:8px 20px;cursor:pointer;">Back</button>
+<h2 style="font-size:36px;margin-bottom:50px;font-weight:normal;">自定义之夜</h2>
+<div style="display:flex;gap:50px;">
+<div style="text-align:center;"><div style="font-size:20px;margin-bottom:15px;">高松灯</div><img src="images/tomori-thumb.jpg" style="width:120px;height:120px;object-fit:cover;border:3px solid #444;"><div style="margin-top:15px;font-size:16px;">A.I Level</div><div style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;"><button onclick="adjustAI('tomori',-1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#60;</button><span id="ai-tomori" style="font-size:24px;min-width:40px;text-align:center;">10</span><button onclick="adjustAI('tomori',1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#62;</button></div></div>
+<div style="text-align:center;"><div style="font-size:20px;margin-bottom:15px;">长崎素世</div><img src="images/soyo-thumb.png" style="width:120px;height:120px;object-fit:cover;border:3px solid #444;"><div style="margin-top:15px;font-size:16px;">A.I Level</div><div style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;"><button onclick="adjustAI('soyo',-1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#60;</button><span id="ai-soyo" style="font-size:24px;min-width:40px;text-align:center;">10</span><button onclick="adjustAI('soyo',1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#62;</button></div></div>
+<div style="text-align:center;"><div style="font-size:20px;margin-bottom:15px;">千早爱音</div><img src="images/anon-thumb.png" style="width:120px;height:120px;object-fit:cover;border:3px solid #444;"><div style="margin-top:15px;font-size:16px;">A.I Level</div><div style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;"><button onclick="adjustAI('anon',-1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#60;</button><span id="ai-anon" style="font-size:24px;min-width:40px;text-align:center;">10</span><button onclick="adjustAI('anon',1)" style="background:#555;border:none;color:#fff;font-size:20px;padding:4px 12px;cursor:pointer;">&#62;</button></div></div>
 </div>
-
+<div style="margin-top:40px;color:#666;font-size:14px;">(0-2)简单&nbsp;&nbsp;(3-6)普通&nbsp;&nbsp;(7-12)困难&nbsp;&nbsp;(13-20)极难</div>
+<button onclick="startCustomNight()" style="position:absolute;right:40px;bottom:40px;background:#888;border:none;color:#000;font-size:24px;padding:12px 30px;cursor:pointer;font-weight:bold;">READY</button>
+</div>
+<div id="level-select" style="position:absolute;inset:0;background:#000;z-index:130;display:none;flex-direction:column;align-items:center;justify-content:center;">
+<h2 style="font-size:32px;margin-bottom:40px;color:#fff;font-weight:normal;border:none;background:none;">选择哪一晚</h2>
+<div style="display:flex;gap:30px;margin-bottom:60px;">
+<button onclick="startGame(1)" style="font-size:18px;border:none;background:none;color:#fff;cursor:pointer;padding:8px 16px;">第一晚</button>
+<button onclick="startGame(2)" style="font-size:18px;border:none;background:none;color:#fff;cursor:pointer;padding:8px 16px;">第二晚</button>
+<button onclick="startGame(3)" style="font-size:18px;border:none;background:none;color:#fff;cursor:pointer;padding:8px 16px;">第三晚</button>
+<button onclick="startGame(4)" style="font-size:18px;border:none;background:none;color:#fff;cursor:pointer;padding:8px 16px;">第四晚</button>
+<button onclick="startGame(5)" style="font-size:18px;border:none;background:none;color:#fff;cursor:pointer;padding:8px 16px;">第五晚</button>
+</div>
+<button onclick="hideLevelSelect()" style="position:absolute;left:40px;bottom:40px;background:none;border:none;color:#888;font-size:16px;cursor:pointer;">返回</button>
+</div>
+<div id="crt"></div><div id="crt-noise"></div>
+<audio id="menu-music" src="sound/menu-music.mp3" loop autoplay preload="auto"></audio>
+</div>
 <script>
-// ===== GAME STATE =====
-let gameRunning = false;
-let hour = 0; // 0=12AM, 1=1AM ... 6=6AM
-let doorL = false, doorR = false; // closed=true
-let lightL = false, lightR = false;
-let camOpen = false;
-let currentCam = '1A';
-let hourTimer = null;
-let aiTimer = null;
-
-// Anon Foxy-style AI state
-let anonStage = 0;           // 0=cove, 1=leaving, 2=approach, 3=hallway, 4=running
-let anonFrozenUntil = 0;     // timestamp until which anon is frozen
-let anonStage3Played = false; // stage3 sound already played
-let anonRunning = false;      // stage4 footstep loop active
-
-// Characters: position 0=stage, 1=hall near stage, 2=hall near office, 3=at door
-const chars = {
-  tomori: { pos:0, path:'images/tomori-idle.jpg', scare:'images/tomori-attack.jpg', name:'高松灯', side:'L', active:true },
-  soyo:   { pos:0, path:'images/soyo-idle.jpg',  scare:'images/soyo-attack.jpg', name:'长崎素世', side:'R', active:true },
-  anon:   { pos:0, path:'images/anon-idle.jpg', scare:'images/anon-attack.jpg',  name:'千早爱音', side:'L', active:true },
-  taki:   { pos:0, path:'images/anon-idle.jpg', scare:'images/anon-attack.jpg',  name:'千早爱音', side:'L', active:false }
-};
-
-// Cam image mapping - use colored placeholders for each cam
-const camNames = {
-  '1A':'Ring','1B':'市区','1C':'爱音家',
-  '2A':'花咲川女子学园','2B':'立希家','3':'羽丘女子学园',
-  '4A':'素世家','4B':'铁道口','5':'space',
-  '6':'灯家','7':'祥子的家门口'
-};
-
-// ===== AUDIO =====
-let audioCtx = null;
-function initAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-}
-function playJumpscareSound() {
-  if (!audioCtx) return;
-  const t = audioCtx.currentTime;
-  // loud noise burst
-  const bufSize = audioCtx.sampleRate * 1.0;
-  const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i=0;i<bufSize;i++) data[i] = (Math.random()*2-1);
-  const noise = audioCtx.createBufferSource();
-  noise.buffer = buf;
-  const noiseGain = audioCtx.createGain();
-  noiseGain.gain.setValueAtTime(1.0, t);
-  noiseGain.gain.exponentialRampToValueAtTime(0.01, t+2.5);
-  const noiseFilter = audioCtx.createBiquadFilter();
-  noiseFilter.type = 'bandpass'; noiseFilter.frequency.value = 2000; noiseFilter.Q.value = 0.5;
-  noise.connect(noiseFilter).connect(noiseGain).connect(audioCtx.destination);
-  noise.start(t);
-  // deep sub-bass impact
-  const sub = audioCtx.createOscillator();
-  sub.type = 'sine';
-  sub.frequency.setValueAtTime(120, t);
-  sub.frequency.exponentialRampToValueAtTime(25, t+1.5);
-  const subGain = audioCtx.createGain();
-  subGain.gain.setValueAtTime(0.9, t);
-  subGain.gain.exponentialRampToValueAtTime(0.01, t+2.0);
-  sub.connect(subGain).connect(audioCtx.destination);
-  sub.start(t); sub.stop(t+2.0);
-  // monkey scream - rapid vibrato high frequency
-  const scr = audioCtx.createOscillator();
-  scr.type = 'sawtooth';
-  const scrGain = audioCtx.createGain();
-  const scrFilter = audioCtx.createBiquadFilter();
-  scrFilter.type = 'highpass'; scrFilter.frequency.value = 800;
-  // rapid frequency wobble like monkey screech
-  const lfo = audioCtx.createOscillator();
-  lfo.type = 'square'; lfo.frequency.value = 30; // 30Hz rapid vibrato
-  const lfoGain = audioCtx.createGain();
-  lfoGain.gain.value = 400;
-  lfo.connect(lfoGain);
-  scr.frequency.setValueAtTime(1500, t);
-  lfoGain.connect(scr.frequency);
-  scrGain.gain.setValueAtTime(0.7, t);
-  scrGain.gain.exponentialRampToValueAtTime(0.01, t+2.0);
-  scr.connect(scrFilter).connect(scrGain).connect(audioCtx.destination);
-  scr.start(t); scr.stop(t+2.1);
-  lfo.start(t); lfo.stop(t+2.1);
-  // second scream layer - higher, faster
-  const scr2 = audioCtx.createOscillator();
-  scr2.type = 'square';
-  scr2.frequency.setValueAtTime(2500, t);
-  const lfo2 = audioCtx.createOscillator();
-  lfo2.type = 'sawtooth'; lfo2.frequency.value = 50;
-  const lfo2Gain = audioCtx.createGain();
-  lfo2Gain.gain.value = 600;
-  lfo2.connect(lfo2Gain);
-  lfo2Gain.connect(scr2.frequency);
-  const s2Gain = audioCtx.createGain();
-  s2Gain.gain.setValueAtTime(0.4, t);
-  s2Gain.exponentialRampToValueAtTime(0.01, t+1.5);
-  scr2.connect(s2Gain).connect(audioCtx.destination);
-  scr2.start(t); scr2.stop(t+1.6);
-  lfo2.start(t); lfo2.stop(t+1.6);
-  // distorted low rumble
-  const osc = audioCtx.createOscillator();
-  osc.type = 'sawtooth';
-  osc.frequency.setValueAtTime(100, t);
-  osc.frequency.exponentialRampToValueAtTime(20, t+1.8);
-  const oscGain = audioCtx.createGain();
-  oscGain.gain.setValueAtTime(0.7, t);
-  oscGain.gain.exponentialRampToValueAtTime(0.01, t+2.0);
-  osc.connect(oscGain).connect(audioCtx.destination);
-  osc.start(t); osc.stop(t+2.1);
-}
-function playDoorSound(close) {
-  if (!audioCtx) return;
-  const t = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  osc.type='square'; osc.frequency.value = close ? 150 : 100;
-  const g = audioCtx.createGain();
-  g.gain.setValueAtTime(0.15, t);
-  g.gain.exponentialRampToValueAtTime(0.01, t+0.3);
-  osc.connect(g).connect(audioCtx.destination);
-  osc.start(t); osc.stop(t+0.35);
-}
-function playBell() {
-  if (!audioCtx) return;
-  const t = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  osc.type='sine'; osc.frequency.value=880;
-  const g = audioCtx.createGain();
-  g.gain.setValueAtTime(0.2, t);
-  g.gain.exponentialRampToValueAtTime(0.01, t+0.5);
-  osc.connect(g).connect(audioCtx.destination);
-  osc.start(t); osc.stop(t+0.6);
-}
-
-// ===== CAM MAP NODES =====
-const camPositions = {
-  '1A': {x:'42%', y:'10%'},
-  '1B': {x:'42%', y:'26%'},
-  '1C': {x:'35%', y:'44%'},
-  '2A': {x:'42%', y:'70%'},
-  '2B': {x:'42%', y:'86%'},
-  '3':  {x:'20%', y:'66%'},
-  '4A': {x:'68%', y:'70%'},
-  '4B': {x:'68%', y:'86%'},
-  '5':  {x:'12%', y:'28%'},
-  '6':  {x:'88%', y:'62%'},
-  '7':  {x:'88%', y:'28%'}
-};
-const camOrder = ['1A','1B','1C','2A','2B','3','4A','4B','5','6','7'];
-
-function buildCamMap() {
-  const map = document.getElementById('cam-map');
-  map.querySelectorAll('.cam-node,.cam-line,.cam-svg').forEach(e=>e.remove());
-  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.classList.add('cam-svg');
-  svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;';
-  map.appendChild(svg);
-  // convert % to pixels
-  const rect = map.getBoundingClientRect();
-  const W = rect.width, H = rect.height;
-  function px(pct) { return (parseFloat(pct)/100)*W; }
-  function py(pct) { return (parseFloat(pct)/100)*H; }
-  // orthogonal paths: always right-angle
-  const paths = [
-    // 1A -> 1B (straight down)
-    ['M',px(camPositions['1A'].x),py(camPositions['1A'].y),'V',py(camPositions['1B'].y)],
-    // 1B -> 5 (straight left)
-    ['M',px(camPositions['1B'].x),py(camPositions['1B'].y),'H',px(camPositions['5'].x)],
-    // 1B -> 7 (straight right)
-    ['M',px(camPositions['1B'].x),py(camPositions['1B'].y),'H',px(camPositions['7'].x)],
-    // 1B -> 1C: down to mid, left to 1C
-    ['M',px(camPositions['1B'].x),py(camPositions['1B'].y),'V',py('35%'),'H',px(camPositions['1C'].x),'V',py(camPositions['1C'].y)],
-    // 1C -> 3: down to y=55%, left to x=20%, down to 3
-    ['M',px(camPositions['1C'].x),py(camPositions['1C'].y),'V',py('55%'),'H',px(camPositions['3'].x),'V',py(camPositions['3'].y)],
-    // 1C -> 2A: down to y=55%, right to x=42%, down to 2A
-    ['M',px(camPositions['1C'].x),py(camPositions['1C'].y),'V',py('55%'),'H',px(camPositions['2A'].x),'V',py(camPositions['2A'].y)],
-    // 2A -> 2B (straight down)
-    ['M',px(camPositions['2A'].x),py(camPositions['2A'].y),'V',py(camPositions['2B'].y)],
-    // 2B -> 4B (straight right)
-    ['M',px(camPositions['2B'].x),py(camPositions['2B'].y),'H',px(camPositions['4B'].x)],
-    // 4A -> 4B (straight down)
-    ['M',px(camPositions['4A'].x),py(camPositions['4A'].y),'V',py(camPositions['4B'].y)],
-    // 4A -> 6: up to y=62%, right to 6
-    ['M',px(camPositions['4A'].x),py(camPositions['4A'].y),'V',py('62%'),'H',px(camPositions['6'].x)]
-  ];
-  paths.forEach(p => {
-    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d', p.join(' '));
-    path.setAttribute('stroke', '#555');
-    path.setAttribute('stroke-width', '2');
-    path.setAttribute('fill', 'none');
-    svg.appendChild(path);
-  });
-  const you = document.createElement('div');
-  you.style.cssText = 'position:absolute;top:86%;left:55%;transform:translateX(-50%);color:#aaa;font-size:10px;z-index:1;';
-  you.textContent = 'YOU';
-  map.appendChild(you);
-  camOrder.forEach(cam => {
-    const pos = camPositions[cam];
-    const el = document.createElement('div');
-    el.className = 'cam-node';
-    el.id = 'cam-'+cam;
-    el.style.left = pos.x; el.style.top = pos.y;
-    el.style.transform = 'translate(-50%,-50%)';
-    el.style.zIndex = '2';
-    el.textContent = 'CAM '+cam;
-    el.onclick = () => switchCam(cam);
-    map.appendChild(el);
-  });
-}
-
-function switchCam(cam) {
-  currentCam = cam;
-  brokenCams.delete(cam);
-  document.querySelectorAll('.cam-node').forEach(n=>n.classList.remove('current'));
-  const el = document.getElementById('cam-'+cam);
-  if (el) el.classList.add('current');
-  document.getElementById('cam-label').textContent = 'CAM '+cam + ' - ' + (camNames[cam]||'');
-  // show characters on this cam
-  updateCamFeed();
-}
-
-let brokenCams = new Set();
-
-function posToCam(name, pos) {
-  if (name==='tomori') {
-    if (pos===0) return '1A';
-    if (pos===1) return '1B';
-    if (pos===2) return '2A';
-    if (pos===3) return '2B';
-    if (pos===5) return '5';
-    if (pos===6) return '3';
-  } else if (name==='soyo') {
-    if (pos===0) return '1A';
-    if (pos===1) return '1B';
-    if (pos===2) return '1C';
-    if (pos===3) return '4A';
-    if (pos===4) return '4B';
-    if (pos===7) return '7';
-  }
-  return null;
-}
-
-function updateCamFeed() {
-  const feed = document.getElementById('cam-feed');
-  feed.querySelectorAll('.cam-char').forEach(e=>e.remove());
-  // 1A special: if both Tomori and Soyo still on stage, show animated GIF
-  const bothOnStage = (chars.tomori.pos===0 && chars.soyo.pos===0);
-  if (currentCam==='1A' && bothOnStage) {
-    feed.style.background = "url('images/cam1a-idle.gif') center/cover no-repeat";
-    feed.classList.remove('snow');
-    return;
-  }
-  // background images for cams, chars overlay on top
-  const camBgs = {
-    '1A': 'images/stage-bg.jpg',
-    '7': 'images/cam7.jpg',
-    '1B': 'images/cam1b.jpg',
-    '5': 'images/cam5.jpg',
-    '3': 'images/cam3.jpg',
-    '1C': 'images/cam1c.jpg',
-    '6': 'images/cam6.jpg',
-    '4A': 'images/cam4a.jpg',
-    '4B': 'images/cam4b.jpg',
-    '2A': 'images/cam2a.jpg',
-    '2B': 'images/cam2b.jpg'
-  };
-  const camBgSizes = {
-    '5': '110%',
-    '1C': '110%',
-    '4B': '110%',
-    '1B': '110%',
-    '4A': '110%',
-    '2B': '110%'
-  };
-  feed.style.background = camBgs[currentCam]
-    ? `url('${camBgs[currentCam]}') center/${camBgSizes[currentCam]||'cover'} no-repeat`
-    : "#000";
-  // collect chars on current cam
-  const charsHere = [];
-  Object.keys(chars).forEach(name => {
-    const c = chars[name];
-    if (!c.active) return;
-    let charCam = null;
-    if (name==='tomori') {
-      if (c.pos===0) charCam='1A';
-      else if (c.pos===1) charCam='1B';
-      else if (c.pos===2) charCam='2A';
-      else if (c.pos===3) charCam='2B';
-      else if (c.pos===5) charCam='5';
-      else if (c.pos===6) charCam='3';
-    } else if (name==='soyo') {
-      if (c.pos===0) charCam='1A';
-      else if (c.pos===1) charCam='1B';
-      else if (c.pos===2) charCam='1C';
-      else if (c.pos===3) charCam='4A';
-      else if (c.pos===4) charCam='4B';
-      else if (c.pos===7) charCam='7';
-    } else if (name==='anon') {
-      if (anonStage === 0 || anonStage === 1) charCam = '1C';
-      else if (anonStage === 2) charCam = '2A';
-      else if (anonStage === 3) charCam = '2B';
-    }
-    if (charCam === currentCam) charsHere.push({name, c});
-  });
-  // lay them out side by side
-  charsHere.forEach((item, i) => {
-    const img = document.createElement('img');
-    // Anon uses stage-specific horror sprites
-    let src = item.c.path;
-    if (item.name === 'anon') {
-      src = 'images/anon-s' + anonStage + '.png';
-    }
-    img.src = src;
-    img.className = 'cam-char';
-    const n = charsHere.length;
-    if (n === 1) {
-      img.style.cssText = 'max-height:70%;max-width:50%;position:absolute;bottom:10%;left:50%;transform:translateX(-50%);';
-    } else {
-      const leftPct = 30 + (i * 40);
-      img.style.cssText = `max-height:60%;max-width:35%;position:absolute;bottom:10%;left:${leftPct}%;transform:translateX(-50%);`;
-    }
-    feed.appendChild(img);
-  });
-  // snow only if char previously left this cam
-  if (charsHere.length === 0 && brokenCams.has(currentCam)) {
-    feed.classList.add('snow');
-  } else {
-    feed.classList.remove('snow');
-  }
-}
-
-// ===== UI CONTROLS =====
-function setupControls() {
-  const bl = document.getElementById('btn-Llight');
-  if (bl) setupHold('btn-Llight', v => { lightL = v; updateDoors(); });
-  const br = document.getElementById('btn-Rlight');
-  if (br) setupHold('btn-Rlight', v => { lightR = v; updateDoors(); });
-  const bld = document.getElementById('btn-Ldoor');
-  if (bld) bld.onclick = () => { doorL = !doorL; updateDoors(); playDoorSound(doorL); };
-  const brd = document.getElementById('btn-Rdoor');
-  if (brd) brd.onclick = () => { doorR = !doorR; updateDoors(); playDoorSound(doorR); };
-  // Cam toggle
-  document.getElementById('btn-cam').onclick = toggleCam;
-  const cc = document.getElementById('cam-close');
-  if (cc) cc.onclick = toggleCam;
-}
-
-function setupHold(id, cb) {
-  const el = document.getElementById(id);
-  el.addEventListener('mousedown', () => { el.classList.add('active'); cb(true); });
-  el.addEventListener('mouseup', () => { el.classList.remove('active'); cb(false); });
-  el.addEventListener('mouseleave', () => { el.classList.remove('active'); cb(false); });
-  // touch support
-  el.addEventListener('touchstart', e => { e.preventDefault(); el.classList.add('active'); cb(true); });
-  el.addEventListener('touchend', () => { el.classList.remove('active'); cb(false); });
-}
-
-function updateDoors() {
-  const bg = document.getElementById('office-bg');
-  let state;
-  if (doorL && doorR) state = 'closed';
-  else if (doorL) state = 'lclosed';
-  else if (doorR) state = 'rclosed';
-  else state = 'open';
-  let img;
-  if (lightL || lightR) {
-    const atL = (chars.tomori.pos === 3) && !doorL;
-    const atR = (chars.soyo.pos === 4) && !doorR;
-    if (atL && atR) img = 'images/office-lit-both.jpg';
-    else if (atL) img = 'images/office-lit-tomori.jpg';
-    else if (atR) img = 'images/office-lit-soyo.jpg';
-    else img = `images/office-${state}-lit.jpg`;
-  } else {
-    img = `images/office-${state}.jpg`;
-  }
-  bg.style.backgroundImage = `url('${img}')`;
-  const bld = document.getElementById('btn-Ldoor');
-  if (bld) bld.classList.toggle('active', doorL);
-  const brd = document.getElementById('btn-Rdoor');
-  if (brd) brd.classList.toggle('active', doorR);
-  const bll = document.getElementById('btn-Llight');
-  if (bll) bll.classList.toggle('active', lightL);
-  const brl = document.getElementById('btn-Rlight');
-  if (brl) brl.classList.toggle('active', lightR);
-}
-
-function updateHallways() {
-  // characters are baked into the lit background images; nothing to overlay
-}
-
-function toggleCam() {
-  camOpen = !camOpen;
-  const overlay = document.getElementById('cam-overlay');
-  overlay.classList.toggle('show', camOpen);
-  if (camOpen) {
-    buildCamMap(); // recalculate pixel coords now that map is visible
-    switchCam(currentCam);
-    anonFrozenUntil = Date.now() + 10000;
-  }
-}
-
-// ===== GAME LOOP =====
-let currentNight = 1;
-
-function startGame(night) {
-  currentNight = night || 1;
-  document.getElementById('start-menu').classList.remove('show');
-  document.getElementById('level-select').style.display = 'none';
-  document.getElementById('end-screen').classList.remove('show');
-  document.getElementById('jumpscare').classList.remove('show');
-  document.getElementById('warning').classList.add('show');
-  // stop menu music, start fan noise
-  const mm = document.getElementById('menu-music');
-  mm.pause(); mm.currentTime = 0;
-  startFanNoise();
-  setTimeout(() => {
-    document.getElementById('warning').classList.remove('show');
-    initAudio();
-    gameRunning = true;
-    hour = 0;
-    // reset chars
-    Object.keys(chars).forEach(k => { chars[k].pos = 0; });
-    chars.anon.active = true;
-    chars.soyo.active = true; // Soyo on stage from start, moves after 3AM
-    // reset Anon Foxy state
-    anonStage = 0;
-    anonFrozenUntil = 0;
-    anonStage3Played = false;
-    anonRunning = false;
-    doorL = doorR = false;
-    updateDoors();
-    updateHallways();
-    showHourBanner();
-    startTimers();
-  }, 2000);
-}
-
-function showHourBanner() {
-  const label = hour===0 ? '12:00 AM' : hour+':00 AM';
-  const banner = document.getElementById('time-banner');
-  banner.textContent = label;
-  banner.classList.add('show');
-  setTimeout(() => banner.classList.remove('show'), 2500);
-  document.querySelector('#time-display').innerHTML =
-    (hour===0?'12':hour)+' AM<br><span class="night">Night '+currentNight+'</span>';
-}
-
-function startTimers() {
-  clearInterval(hourTimer);
-  clearInterval(aiTimer);
-  // 1 hour every 45 seconds (game pace)
-  hourTimer = setInterval(() => {
-    if (!gameRunning) return;
-    hour++;
-    if (hour >= 6) {
-      victory();
-      return;
-    }
-    if (hour >= 3) chars.soyo.active = true; // Soyo (Freddy) activates at 3AM
-    showHourBanner();
-    playBell();
-  }, 45000);
-
-  // AI movement every 3 seconds
-  aiTimer = setInterval(() => {
-    if (!gameRunning) return;
-    updateCharacters();
-    updateAnonFoxy();
-  }, 3000);
-}
-
-function updateCharacters() {
-  const aiSettings = {
-    1: { chance: 0.05, activate: 3 },
-    2: { chance: 0.08, activate: 3 },
-    3: { chance: 0.10, activate: 2 },
-    4: { chance: 0.12, activate: 2 },
-    5: { chance: 0.15, activate: 1 },
-    6: { chance: 0.20, activate: 1 }
-  };
-  const s = aiSettings[currentNight] || { chance: 0.05, activate: 3 };
-  let chance = s.chance;
-  let activateHour = s.activate;
-  if (currentNight === 'custom') {
-    chance = Math.max(customAI.tomori, customAI.soyo, customAI.anon) / 100;
-    activateHour = 1;
-  }
-
-  // Tomori
-  if (hour >= activateHour) {
-    const c = chars.tomori;
-    if (c.active && c.pos < 3 && Math.random() < chance) {
-      const oldCam = posToCam('tomori', c.pos);
-      if (oldCam) brokenCams.add(oldCam);
-      // play move sound at 25% volume
-      const ms = new Audio('sound/tomori-scare.mp3');
-      ms.volume = 0.25;
-      ms.play();
-      // Random detour: after 1B, sometimes visit cam5 or cam3
-      if (c.pos === 1 && Math.random() < 0.3) {
-        c.pos = Math.random() < 0.5 ? 5 : 6; // visit cam5 or cam3
-      } else {
-        c.pos++;
-      }
-      // If detoured, next step continues to 2A
-      if (c.pos === 5 || c.pos === 6) {
-        setTimeout(() => {
-          if (!gameRunning) return;
-          const oc = posToCam('tomori', c.pos);
-          if (oc) brokenCams.add(oc);
-          c.pos = 2; // go to 2A
-          if (camOpen) updateCamFeed();
-        }, 8000);
-      }
-      // pos=3 = 2B left door, check within 5s
-      if (c.pos === 3) {
-        updateDoors();
-        setTimeout(() => {
-          if (!gameRunning) return;
-          if (!doorL) jumpscare('tomori');
-          else { c.pos = 0; updateDoors(); }
-        }, 5000);
-      }
-      if (camOpen) updateCamFeed();
-    }
-  }
-
-  // Soyo
-  if (hour >= activateHour) {
-    const c = chars.soyo;
-    if (c.active && c.pos < 4 && Math.random() < chance) {
-      const oldCam = posToCam('soyo', c.pos);
-      if (oldCam) brokenCams.add(oldCam);
-      // play move sound at 25% volume
-      const ms = new Audio('sound/soyo-scare.mp3');
-      ms.volume = 0.25;
-      ms.play();
-      // Random detour: after 1B, sometimes visit cam7
-      if (c.pos === 1 && Math.random() < 0.3) {
-        c.pos = 7;
-      } else {
-        c.pos++;
-      }
-      if (c.pos === 7) {
-        setTimeout(() => {
-          if (!gameRunning) return;
-          const oc = posToCam('soyo', c.pos);
-          if (oc) brokenCams.add(oc);
-          c.pos = 2; // go to 1C
-          if (camOpen) updateCamFeed();
-        }, 8000);
-      }
-      // pos=4 = 4B right door, check within 5s
-      if (c.pos === 4) {
-        updateDoors();
-        setTimeout(() => {
-          if (!gameRunning) return;
-          if (!doorR) jumpscare('soyo');
-          else { c.pos = 0; updateDoors(); }
-        }, 5000);
-      }
-      if (camOpen) updateCamFeed();
-    }
-  }
-
-  updateHallways();
-  if (camOpen) updateCamFeed();
-}
-
-// ===== Anon Foxy AI =====
-// Stages: 0=cove, 1=leaving, 2=approach, 3=left hallway (sound), 4=running (footsteps)
-function updateAnonFoxy() {
-  if (!gameRunning || !chars.anon.active) return;
-  // Night 1: Anon stays in Pirate Cove, AI=0, never moves
-  if (currentNight !== 6 && currentNight !== 'custom') return;
-  // frozen while cam is open (or for 10s after closing)
-  if (Date.now() < anonFrozenUntil) return;
-  if (anonStage >= 4) return; // already running to door
-
-  // difficulty ramp: earlier hours slower
-  const speed = 0.15 + hour * 0.05;
-  if (Math.random() < speed) {
-    anonStage++;
-    if (anonStage === 3) {
-      // play stage3 sound ONCE
-      if (!anonStage3Played) {
-        anonStage3Played = true;
-        playAnonStage3();
-      }
-    }
-    if (anonStage === 4) {
-      // start running footsteps, then rush left door
-      startAnonRun();
-    }
-  }
-}
-
-function playAnonStage3() {
-  const a = new Audio('sound/anon-stage3.mp3');
-  a.volume = 0.6;
-  a.play().catch(()=>{});
-}
-
-function playAnonFail() {
-  const a = new Audio('sound/anon-fail.mp3');
-  a.volume = 0.6;
-  a.play().catch(()=>{});
-}
-
-function startAnonRun() {
-  // play rapid footsteps sound, 5 seconds total
-  initAudio();
-  const ctx = audioCtx;
-  const footstepGain = ctx.createGain();
-  footstepGain.gain.value = 0.3;
-  footstepGain.connect(ctx.destination);
-  let stepCount = 0;
-  const stepInterval = setInterval(() => {
-    if (!gameRunning || !anonRunning) { clearInterval(stepInterval); return; }
-    const osc = ctx.createOscillator();
-    const g = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(120, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.1);
-    g.gain.setValueAtTime(0.5, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-    osc.connect(g).connect(footstepGain);
-    osc.start(); osc.stop(ctx.currentTime + 0.2);
-    stepCount++;
-    if (stepCount >= 20) {
-      clearInterval(stepInterval);
-      anonRunning = false;
-      // 5 seconds total: rush left door
-      setTimeout(() => {
-        if (!gameRunning) return;
-        if (!doorL) {
-          jumpscare('anon');
-        } else {
-          playAnonFail();
-          anonStage = 0;
-          anonStage3Played = false;
-        }
-        updateHallways();
-      }, 0);
-    }
-  }, 250);
-  anonRunning = true;
-}
-
-function jumpscare(name) {
-  gameRunning = false;
-  clearInterval(hourTimer);
-  clearInterval(aiTimer);
-  if (name === 'soyo') {
-    const a = new Audio('sound/soyo-scare.mp3');
-    a.volume = 0.9;
-    a.play();
-  } else if (name === 'anon') {
-    const a = new Audio('sound/anon-scare.mp3');
-    a.volume = 0.9;
-    a.play();
-  } else {
-    const a = new Audio('sound/tomori-scare.mp3');
-    a.volume = 0.9;
-    a.play();
-  }
-  const sc = document.getElementById('jumpscare');
-  sc.querySelector('img').src = chars[name].scare || chars[name].path;
-  sc.classList.add('show');
-  setTimeout(() => {
-    sc.classList.remove('show');
-    const es = document.getElementById('end-screen');
-    es.classList.add('show','gameover');
-    es.querySelector('h1').textContent = 'GAME OVER';
-    document.getElementById('next-night-btn').style.display = 'none';
-    document.getElementById('end-msg').textContent =
-      chars[name].name + ' 跳杀了你。';
-    document.getElementById('end-time').textContent =
-      'You reached '+(hour===0?'12':hour)+' AM on Night '+currentNight+'.';
-  }, 2500);
-}
-
-function victory() {
-  gameRunning = false;
-  clearInterval(hourTimer);
-  clearInterval(aiTimer);
-  playBell();
-  const es = document.getElementById('end-screen');
-  es.classList.add('show','victory');
-  es.querySelector('h1').textContent = '6:00 AM';
-  document.getElementById('end-msg').textContent = 'You survived the night!';
-  document.getElementById('end-time').textContent = 'Night '+currentNight+' Complete.';
-  document.getElementById('next-night-btn').style.display = (currentNight >= 1 && currentNight <= 4) ? 'block' : 'none';
-}
-
-function showCustomNight() {
-  document.getElementById('custom-night').style.display = 'flex';
-}
-function hideCustomNight() {
-  document.getElementById('custom-night').style.display = 'none';
-}
-let customAI = { tomori: 10, soyo: 10, anon: 10 };
-function adjustAI(name, delta) {
-  customAI[name] = Math.max(0, Math.min(20, customAI[name] + delta));
-  document.getElementById('ai-' + name).textContent = customAI[name];
-}
-function startCustomNight() {
-  // Secret: tomori=7, soyo=2, anon=1
-  if (customAI.tomori === 7 && customAI.soyo === 2 && customAI.anon === 1) {
-    playSecret();
-    return;
-  }
-  document.getElementById('custom-night').style.display = 'none';
-  startGame('custom');
-}
-
-function playSecret() {
-  // play all jumpscare sounds at once
-  const s1 = new Audio('sound/tomori-scare.mp3');
-  const s2 = new Audio('sound/soyo-scare.mp3');
-  const s3 = new Audio('sound/anon-scare.mp3');
-  s1.volume = 0.9; s2.volume = 0.9; s3.volume = 0.9;
-  s1.play(); s2.play(); s3.play();
-  // show all jumpscare images at once
-  const sc = document.getElementById('jumpscare');
-  sc.style.background = '#000';
-  sc.innerHTML = '<div style="display:flex;gap:20px;align-items:center;justify-content:center;width:100%;height:100%;">'
-    + '<img src="images/tomori-attack.jpg" style="max-height:80vh;">'
-    + '<img src="images/soyo-attack.jpg" style="max-height:80vh;">'
-    + '<img src="images/anon-attack.jpg" style="max-height:80vh;">'
-    + '</div>';
-  sc.classList.add('show');
-  // close page after 3 seconds, go back to main menu
-  setTimeout(() => {
-    document.getElementById('jumpscare').classList.remove('show');
-    document.getElementById('jumpscare').innerHTML = '<img>';
-    backToMenu();
-  }, 3000);
-}
-
-function showLevelSelect() {
-  document.getElementById('level-select').style.display = 'flex';
-}
-function hideLevelSelect() {
-  document.getElementById('level-select').style.display = 'none';
-}
-
-function chooseNight() {
-  const n = prompt("选择关卡 (1-5):");
-  const num = parseInt(n);
-  if (num >= 1 && num <= 5) startGame(num);
-}
-
-function backToMenu() {
-  gameRunning = false;
-  clearInterval(hourTimer);
-  clearInterval(aiTimer);
-  document.getElementById('end-screen').classList.remove('show','gameover','victory');
-  document.getElementById('jumpscare').classList.remove('show');
-  document.getElementById('custom-night').style.display = 'none';
-  document.getElementById('level-select').style.display = 'none';
-  // reset all state
-  hour = 0;
-  doorL = doorR = false;
-  lightL = lightR = false;
-  camOpen = false;
-  brokenCams.clear();
-  Object.keys(chars).forEach(k => { chars[k].pos = 0; });
-  chars.anon.active = (currentNight === 6);
-  chars.soyo.active = true;
-  anonStage = 0;
-  anonFrozenUntil = 0;
-  anonStage3Played = false;
-  anonRunning = false;
-  // close cams
-  document.getElementById('cam-overlay').classList.remove('show');
-  // restore office view
-  updateDoors();
-  // show menu, play menu music
-  document.getElementById('start-menu').classList.add('show');
-  const mm = document.getElementById('menu-music');
-  mm.currentTime = 0;
-  mm.loop = true;
-  mm.play().catch(()=>{});
-}
-
-// ===== SCARE PREVIEW =====
-function previewScare(name) {
-  initAudio();
-  if (name === 'soyo') {
-    const a = new Audio('sound/soyo-scare.mp3');
-    a.volume = 0.9;
-    a.play();
-  } else if (name === 'anon') {
-    const a = new Audio('sound/anon-scare.mp3');
-    a.volume = 0.9;
-    a.play();
-  } else {
-    const a = new Audio('sound/tomori-scare.mp3');
-    a.volume = 0.9;
-    a.play();
-  }
-  const sc = document.getElementById('jumpscare');
-  sc.querySelector('img').src = chars[name].scare || chars[name].path;
-  sc.classList.add('show');
-  // click to return
-  const back = () => {
-    sc.classList.remove('show');
-    sc.removeEventListener('click', back);
-  };
-  sc.addEventListener('click', back);
-  setTimeout(back, 3000);
-}
-
-// ===== FAN NOISE =====
-let fanNode = null;
-function startFanNoise() {
-  initAudio();
-  if (fanNode) return;
-  const ctx = audioCtx;
-  // white noise buffer
-  const size = ctx.sampleRate * 2;
-  const buf = ctx.createBuffer(1, size, ctx.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i=0;i<size;i++) data[i] = (Math.random()*2-1)*0.3;
-  const noise = ctx.createBufferSource();
-  noise.buffer = buf; noise.loop = true;
-  // lowpass filter to make it sound like a fan
-  const filter = ctx.createBiquadFilter();
-  filter.type = 'lowpass'; filter.frequency.value = 300;
-  const gain = ctx.createGain();
-  gain.gain.value = 0.15;
-  // add a slight hum
-  const hum = ctx.createOscillator();
-  hum.type = 'sawtooth'; hum.frequency.value = 60;
-  const humGain = ctx.createGain(); humGain.gain.value = 0.03;
-  noise.connect(filter).connect(gain).connect(ctx.destination);
-  hum.connect(humGain).connect(ctx.destination);
-  noise.start(); hum.start();
-  fanNode = { noise, hum, gain };
-}
-
-// ===== INIT =====
-buildCamMap();
-setupControls();
-// show start menu
+let gameRunning=false,hour=0,doorL=false,doorR=false,lightL=false,lightR=false,camOpen=false,currentCam='1A',hourTimer=null,aiTimer=null;
+let anonStage=0,anonFrozenUntil=0,anonStage3Played=false,anonRunning=false;
+const chars={tomori:{pos:0,path:'images/tomori-idle.png',scare:'images/tomori-attack.png',name:'高松灯',side:'L',active:true},soyo:{pos:0,path:'images/soyo-idle.png',scare:'images/soyo-attack.jpg',name:'长崎素世',side:'R',active:true},anon:{pos:0,path:'images/anon-idle.jpg',scare:'images/anon-attack.jpg',name:'千早爱音',side:'L',active:true},taki:{pos:0,path:'images/anon-idle.jpg',scare:'images/anon-attack.jpg',name:'千早爱音',side:'L',active:false}};
+const camNames={'1A':'Ring','1B':'市区','1C':'爱音家','2A':'花咲川女子学园','2B':'立希家','3':'羽丘女子学园','4A':'素世家','4B':'铁道口','5':'space','6':'灯家','7':'祥子的家门口'};
+let audioCtx=null;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();}
+function playJumpscareSound(){if(!audioCtx)return;const t=audioCtx.currentTime;const bufSize=audioCtx.sampleRate*1.0;const buf=audioCtx.createBuffer(1,bufSize,audioCtx.sampleRate);const data=buf.getChannelData(0);for(let i=0;i<bufSize;i++)data[i]=(Math.random()*2-1);const noise=audioCtx.createBufferSource();noise.buffer=buf;const ng=audioCtx.createGain();ng.gain.setValueAtTime(1.0,t);ng.gain.exponentialRampToValueAtTime(0.01,t+2.5);const nf=audioCtx.createBiquadFilter();nf.type='bandpass';nf.frequency.value=2000;nf.Q.value=0.5;noise.connect(nf).connect(ng).connect(audioCtx.destination);noise.start(t);const sub=audioCtx.createOscillator();sub.type='sine';sub.frequency.setValueAtTime(120,t);sub.frequency.exponentialRampToValueAtTime(25,t+1.5);const sg=audioCtx.createGain();sg.gain.setValueAtTime(0.9,t);sg.gain.exponentialRampToValueAtTime(0.01,t+2.0);sub.connect(sg).connect(audioCtx.destination);sub.start(t);sub.stop(t+2.0);const scr=audioCtx.createOscillator();scr.type='sawtooth';const scrg=audioCtx.createGain();const scrf=audioCtx.createBiquadFilter();scrf.type='highpass';scrf.frequency.value=800;const lfo=audioCtx.createOscillator();lfo.type='square';lfo.frequency.value=30;const lfog=audioCtx.createGain();lfog.gain.value=400;lfo.connect(lfog);scr.frequency.setValueAtTime(1500,t);lfog.connect(scr.frequency);scrg.gain.setValueAtTime(0.7,t);scrg.gain.exponentialRampToValueAtTime(0.01,t+2.0);scr.connect(scrf).connect(scrg).connect(audioCtx.destination);scr.start(t);scr.stop(t+2.1);lfo.start(t);lfo.stop(t+2.1);const scr2=audioCtx.createOscillator();scr2.type='square';scr2.frequency.setValueAtTime(2500,t);const lfo2=audioCtx.createOscillator();lfo2.type='sawtooth';lfo2.frequency.value=50;const lfo2g=audioCtx.createGain();lfo2g.gain.value=600;lfo2.connect(lfo2g);lfo2g.connect(scr2.frequency);const s2g=audioCtx.createGain();s2g.gain.setValueAtTime(0.4,t);s2g.gain.exponentialRampToValueAtTime(0.01,t+1.5);scr2.connect(s2g).connect(audioCtx.destination);scr2.start(t);scr2.stop(t+1.6);lfo2.start(t);lfo2.stop(t+1.6);const osc=audioCtx.createOscillator();osc.type='sawtooth';osc.frequency.setValueAtTime(100,t);osc.frequency.exponentialRampToValueAtTime(20,t+1.8);const og=audioCtx.createGain();og.gain.setValueAtTime(0.7,t);og.gain.exponentialRampToValueAtTime(0.01,t+2.0);osc.connect(og).connect(audioCtx.destination);osc.start(t);osc.stop(t+2.1);}
+function playDoorSound(c){if(!audioCtx)return;const t=audioCtx.currentTime;const o=audioCtx.createOscillator();o.type='square';o.frequency.value=c?150:100;const g=audioCtx.createGain();g.gain.setValueAtTime(0.15,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.3);o.connect(g).connect(audioCtx.destination);o.start(t);o.stop(t+0.35);}
+function playBell(){if(!audioCtx)return;const t=audioCtx.currentTime;const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=880;const g=audioCtx.createGain();g.gain.setValueAtTime(0.2,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.5);o.connect(g).connect(audioCtx.destination);o.start(t);o.stop(t+0.6);}
+const camPositions={'1A':{x:'42%',y:'10%'},'1B':{x:'42%',y:'26%'},'1C':{x:'35%',y:'44%'},'2A':{x:'42%',y:'70%'},'2B':{x:'42%',y:'86%'},'3':{x:'20%',y:'66%'},'4A':{x:'68%',y:'70%'},'4B':{x:'68%',y:'86%'},'5':{x:'12%',y:'28%'},'6':{x:'88%',y:'62%'},'7':{x:'88%',y:'28%'}};
+const camOrder=['1A','1B','1C','2A','2B','3','4A','4B','5','6','7'];
+function buildCamMap(){const map=document.getElementById('cam-map');map.querySelectorAll('.cam-node,.cam-line,.cam-svg').forEach(e=>e.remove());const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('cam-svg');svg.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;';map.appendChild(svg);const rect=map.getBoundingClientRect();const W=rect.width,H=rect.height;function px(p){return(parseFloat(p)/100)*W;}function py(p){return(parseFloat(p)/100)*H;}const paths=[['M',px(camPositions['1A'].x),py(camPositions['1A'].y),'V',py(camPositions['1B'].y)],['M',px(camPositions['1B'].x),py(camPositions['1B'].y),'H',px(camPositions['5'].x)],['M',px(camPositions['1B'].x),py(camPositions['1B'].y),'H',px(camPositions['7'].x)],['M',px(camPositions['1B'].x),py(camPositions['1B'].y),'V',py('35%'),'H',px(camPositions['1C'].x),'V',py(camPositions['1C'].y)],['M',px(camPositions['1C'].x),py(camPositions['1C'].y),'V',py('55%'),'H',px(camPositions['3'].x),'V',py(camPositions['3'].y)],['M',px(camPositions['1C'].x),py(camPositions['1C'].y),'V',py('55%'),'H',px(camPositions['2A'].x),'V',py(camPositions['2A'].y)],['M',px(camPositions['2A'].x),py(camPositions['2A'].y),'V',py(camPositions['2B'].y)],['M',px(camPositions['2B'].x),py(camPositions['2B'].y),'H',px(camPositions['4B'].x)],['M',px(camPositions['4A'].x),py(camPositions['4A'].y),'V',py(camPositions['4B'].y)],['M',px(camPositions['4A'].x),py(camPositions['4A'].y),'V',py('62%'),'H',px(camPositions['6'].x)]];paths.forEach(p=>{const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',p.join(' '));path.setAttribute('stroke','#555');path.setAttribute('stroke-width','2');path.setAttribute('fill','none');svg.appendChild(path);});const you=document.createElement('div');you.style.cssText='position:absolute;top:86%;left:55%;transform:translateX(-50%);color:#aaa;font-size:10px;z-index:1;';you.textContent='YOU';map.appendChild(you);camOrder.forEach(cam=>{const pos=camPositions[cam];const el=document.createElement('div');el.className='cam-node';el.id='cam-'+cam;el.style.left=pos.x;el.style.top=pos.y;el.style.transform='translate(-50%,-50%)';el.style.zIndex='2';el.textContent='CAM '+cam;el.onclick=()=>switchCam(cam);map.appendChild(el);});}
+function switchCam(cam){currentCam=cam;brokenCams.delete(cam);document.querySelectorAll('.cam-node').forEach(n=>n.classList.remove('current'));const el=document.getElementById('cam-'+cam);if(el)el.classList.add('current');document.getElementById('cam-label').textContent='CAM '+cam+' - '+(camNames[cam]||'');updateCamFeed();}
+let brokenCams=new Set();
+function posToCam(n,p){if(n==='tomori'){if(p===0)return'1A';if(p===1)return'1B';if(p===2)return'2A';if(p===3)return'2B';if(p===5)return'5';if(p===6)return'3';}else if(n==='soyo'){if(p===0)return'1A';if(p===1)return'1B';if(p===2)return'1C';if(p===3)return'4A';if(p===4)return'4B';if(p===7)return'7';}return null;}
+function updateCamFeed(){const feed=document.getElementById('cam-feed');feed.querySelectorAll('.cam-char,.stage-scene').forEach(e=>e.remove());const bothOnStage=(chars.tomori.pos===0&&chars.soyo.pos===0);if(currentCam==='1A'&&bothOnStage){feed.style.background="url('images/cam1a-idle.gif') center/cover no-repeat";feed.classList.remove('snow');return;}const camBgs={'1A':'images/stage-bg.jpg','7':'images/cam7.jpg','1B':'images/cam1b.jpg','5':'images/cam5.jpg','3':'images/cam3.jpg','1C':'images/cam1c.jpg','6':'images/cam6.jpg','4A':'images/cam4a.jpg','4B':'images/cam4b.jpg','2A':'images/cam2a.jpg','2B':'images/cam2b.jpg'};const camBgSizes={'5':'110%','1C':'110%','4B':'110%','1B':'110%','4A':'110%','2B':'110%'};feed.style.background=camBgs[currentCam]?`url('${camBgs[currentCam]}') center/${camBgSizes[currentCam]||'cover'} no-repeat`:"#000";const charsHere=[];Object.keys(chars).forEach(name=>{const c=chars[name];if(!c.active)return;let charCam=null;if(name==='tomori'){if(c.pos===0)charCam='1A';else if(c.pos===1)charCam='1B';else if(c.pos===2)charCam='2A';else if(c.pos===3)charCam='2B';else if(c.pos===5)charCam='5';else if(c.pos===6)charCam='3';}else if(name==='soyo'){if(c.pos===0)charCam='1A';else if(c.pos===1)charCam='1B';else if(c.pos===2)charCam='1C';else if(c.pos===3)charCam='4A';else if(c.pos===4)charCam='4B';else if(c.pos===7)charCam='7';}else if(name==='anon'){if(anonStage===0||anonStage===1)charCam='1C';else if(anonStage===2)charCam='2A';else if(anonStage===3)charCam='2B';}if(charCam===currentCam)charsHere.push({name,c});});charsHere.forEach((item,i)=>{const img=document.createElement('img');let src=item.c.path;if(item.name==='anon'){src='images/anon-s'+anonStage+'.png';}img.src=src;img.className='cam-char';const n=charsHere.length;if(n===1){img.style.cssText='max-height:70%;max-width:50%;position:absolute;bottom:10%;left:50%;transform:translateX(-50%);';}else{const lp=30+(i*40);img.style.cssText=`max-height:60%;max-width:35%;position:absolute;bottom:10%;left:${lp}%;transform:translateX(-50%);`;}feed.appendChild(img);});if(charsHere.length===0&&brokenCams.has(currentCam)){feed.classList.add('snow');}else{feed.classList.remove('snow');}}
+function setupControls(){const bl=document.getElementById('btn-Llight');if(bl)setupHold('btn-Llight',v=>{lightL=v;updateDoors();});const br=document.getElementById('btn-Rlight');if(br)setupHold('btn-Rlight',v=>{lightR=v;updateDoors();});const bld=document.getElementById('btn-Ldoor');if(bld)bld.onclick=()=>{doorL=!doorL;updateDoors();playDoorSound(doorL);};const brd=document.getElementById('btn-Rdoor');if(brd)brd.onclick=()=>{doorR=!doorR;updateDoors();playDoorSound(doorR);};document.getElementById('btn-cam').onclick=toggleCam;const cc=document.getElementById('cam-close');if(cc)cc.onclick=toggleCam;}
+function setupHold(id,cb){const el=document.getElementById(id);el.addEventListener('mousedown',()=>{el.classList.add('active');cb(true);});el.addEventListener('mouseup',()=>{el.classList.remove('active');cb(false);});el.addEventListener('mouseleave',()=>{el.classList.remove('active');cb(false);});el.addEventListener('touchstart',e=>{e.preventDefault();el.classList.add('active');cb(true);});el.addEventListener('touchend',()=>{el.classList.remove('active');cb(false);});}
+function updateDoors(){const bg=document.getElementById('office-bg');let state;if(doorL&&doorR)state='closed';else if(doorL)state='lclosed';else if(doorR)state='rclosed';else state='open';let img;if(lightL||lightR){const atL=(chars.tomori.pos===3)&&!doorL;const atR=(chars.soyo.pos===4)&&!doorR;if(atL&&atR)img='images/office-lit-both.png';else if(atL)img='images/office-lit-tomori.png';else if(atR)img='images/office-lit-soyo.png';else img=`images/office-${state}-lit.png`;}else{img=`images/office-${state}.png`;}bg.style.backgroundImage=`url('${img}')`;const bld=document.getElementById('btn-Ldoor');if(bld)bld.classList.toggle('active',doorL);const brd=document.getElementById('btn-Rdoor');if(brd)brd.classList.toggle('active',doorR);const bll=document.getElementById('btn-Llight');if(bll)bll.classList.toggle('active',lightL);const brl=document.getElementById('btn-Rlight');if(brl)brl.classList.toggle('active',lightR);}
+function updateHallways(){}
+function toggleCam(){camOpen=!camOpen;const overlay=document.getElementById('cam-overlay');overlay.classList.toggle('show',camOpen);if(camOpen){buildCamMap();switchCam(currentCam);anonFrozenUntil=Date.now()+10000;}}
+let currentNight=1;
+function startGame(night){currentNight=night||1;document.getElementById('start-menu').classList.remove('show');document.getElementById('level-select').style.display='none';document.getElementById('end-screen').classList.remove('show');document.getElementById('jumpscare').classList.remove('show');document.getElementById('warning').classList.add('show');const mm=document.getElementById('menu-music');mm.pause();mm.currentTime=0;startFanNoise();setTimeout(()=>{document.getElementById('warning').classList.remove('show');initAudio();gameRunning=true;hour=0;Object.keys(chars).forEach(k=>{chars[k].pos=0;});chars.anon.active=true;chars.soyo.active=true;anonStage=0;anonFrozenUntil=0;anonStage3Played=false;anonRunning=false;doorL=doorR=false;updateDoors();updateHallways();showHourBanner();startTimers();},2000);}
+function showHourBanner(){const label=hour===0?'12:00 AM':hour+':00 AM';const banner=document.getElementById('time-banner');banner.textContent=label;banner.classList.add('show');setTimeout(()=>banner.classList.remove('show'),2500);document.querySelector('#time-display').innerHTML=(hour===0?'12':hour)+' AM<br><span class="night">Night '+currentNight+'</span>';}
+function startTimers(){clearInterval(hourTimer);clearInterval(aiTimer);hourTimer=setInterval(()=>{if(!gameRunning)return;hour++;if(hour>=6){victory();return;}if(hour>=3)chars.soyo.active=true;showHourBanner();playBell();},45000);aiTimer=setInterval(()=>{if(!gameRunning)return;updateCharacters();updateAnonFoxy();},3000);}
+function updateCharacters(){const aiSettings={1:{chance:0.05,activate:3},2:{chance:0.08,activate:3},3:{chance:0.10,activate:2},4:{chance:0.12,activate:2},5:{chance:0.15,activate:1},6:{chance:0.20,activate:1}};const s=aiSettings[currentNight]||{chance:0.05,activate:3};let chance=s.chance;let activateHour=s.activate;if(currentNight==='custom'){chance=Math.max(customAI.tomori,customAI.soyo,customAI.anon)/100;activateHour=1;}if(hour>=activateHour){const c=chars.tomori;if(c.active&&c.pos<3&&Math.random()<chance){const oldCam=posToCam('tomori',c.pos);if(oldCam)brokenCams.add(oldCam);const ms=new Audio('sound/tomori-scare.mp3');ms.volume=0.25;ms.play();if(c.pos===1&&Math.random()<0.3){c.pos=Math.random()<0.5?5:6;}else{c.pos++;}if(c.pos===5||c.pos===6){setTimeout(()=>{if(!gameRunning)return;const oc=posToCam('tomori',c.pos);if(oc)brokenCams.add(oc);c.pos=2;if(camOpen)updateCamFeed();},8000);}if(c.pos===3){updateDoors();setTimeout(()=>{if(!gameRunning)return;if(!doorL)jumpscare('tomori');else{c.pos=0;updateDoors();}},5000);}if(camOpen)updateCamFeed();}}if(hour>=activateHour){const c=chars.soyo;if(c.active&&c.pos<4&&Math.random()<chance){const oldCam=posToCam('soyo',c.pos);if(oldCam)brokenCams.add(oldCam);const ms=new Audio('sound/soyo-scare.mp3');ms.volume=0.25;ms.play();if(c.pos===1&&Math.random()<0.3){c.pos=7;}else{c.pos++;}if(c.pos===7){setTimeout(()=>{if(!gameRunning)return;const oc=posToCam('soyo',c.pos);if(oc)brokenCams.add(oc);c.pos=2;if(camOpen)updateCamFeed();},8000);}if(c.pos===4){updateDoors();setTimeout(()=>{if(!gameRunning)return;if(!doorR)jumpscare('soyo');else{c.pos=0;updateDoors();}},5000);}if(camOpen)updateCamFeed();}}updateHallways();if(camOpen)updateCamFeed();}
+function updateAnonFoxy(){if(!gameRunning||!chars.anon.active)return;if(currentNight!==6&&currentNight!=='custom')return;if(Date.now()<anonFrozenUntil)return;if(anonStage>=4)return;const speed=0.15+hour*0.05;if(Math.random()<speed){anonStage++;if(anonStage===3){if(!anonStage3Played){anonStage3Played=true;playAnonStage3();}}if(anonStage===4){startAnonRun();}}}
+function playAnonStage3(){const a=new Audio('sound/anon-stage3.mp3');a.volume=0.6;a.play().catch(()=>{});}
+function playAnonFail(){const a=new Audio('sound/anon-fail.mp3');a.volume=0.6;a.play().catch(()=>{});}
+function startAnonRun(){initAudio();const ctx=audioCtx;const fg=ctx.createGain();fg.gain.value=0.3;fg.connect(ctx.destination);let sc=0;const si=setInterval(()=>{if(!gameRunning||!anonRunning){clearInterval(si);return;}const osc=ctx.createOscillator();const g=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(120,ctx.currentTime);osc.frequency.exponentialRampToValueAtTime(40,ctx.currentTime+0.1);g.gain.setValueAtTime(0.5,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+0.15);osc.connect(g).connect(fg);osc.start();osc.stop(ctx.currentTime+0.2);sc++;if(sc>=20){clearInterval(si);anonRunning=false;setTimeout(()=>{if(!gameRunning)return;if(!doorL){jumpscare('anon');}else{playAnonFail();anonStage=0;anonStage3Played=false;}updateHallways();},0);}},250);anonRunning=true;}
+function jumpscare(name){gameRunning=false;clearInterval(hourTimer);clearInterval(aiTimer);if(name==='soyo'){const a=new Audio('sound/soyo-scare.mp3');a.volume=0.9;a.play();}else if(name==='anon'){const a=new Audio('sound/anon-scare.mp3');a.volume=0.9;a.play();}else{const a=new Audio('sound/tomori-scare.mp3');a.volume=0.9;a.play();}const sc=document.getElementById('jumpscare');sc.querySelector('img').src=chars[name].scare||chars[name].path;sc.classList.add('show');setTimeout(()=>{sc.classList.remove('show');const es=document.getElementById('end-screen');es.classList.add('show','gameover');es.querySelector('h1').textContent='GAME OVER';document.getElementById('next-night-btn').style.display='none';document.getElementById('end-msg').textContent=chars[name].name+' 跳杀了你。';document.getElementById('end-time').textContent='You reached '+(hour===0?'12':hour)+' AM on Night '+currentNight+'.';},2500);}
+function victory(){gameRunning=false;clearInterval(hourTimer);clearInterval(aiTimer);playBell();const es=document.getElementById('end-screen');es.classList.add('show','victory');es.querySelector('h1').textContent='6:00 AM';document.getElementById('end-msg').textContent='You survived the night!';document.getElementById('end-time').textContent='Night '+currentNight+' Complete.';document.getElementById('next-night-btn').style.display=(currentNight>=1&&currentNight<=4)?'block':'none';}
+function showCustomNight(){document.getElementById('custom-night').style.display='flex';}
+function hideCustomNight(){document.getElementById('custom-night').style.display='none';}
+let customAI={tomori:10,soyo:10,anon:10};
+function adjustAI(name,delta){customAI[name]=Math.max(0,Math.min(20,customAI[name]+delta));document.getElementById('ai-'+name).textContent=customAI[name];}
+function startCustomNight(){if(customAI.tomori===7&&customAI.soyo===2&&customAI.anon===1){playSecret();return;}document.getElementById('custom-night').style.display='none';startGame('custom');}
+function playSecret(){const s1=new Audio('sound/tomori-scare.mp3');const s2=new Audio('sound/soyo-scare.mp3');const s3=new Audio('sound/anon-scare.mp3');s1.volume=0.9;s2.volume=0.9;s3.volume=0.9;s1.play();s2.play();s3.play();const sc=document.getElementById('jumpscare');sc.style.background='#000';sc.innerHTML='<div style="display:flex;gap:20px;align-items:center;justify-content:center;width:100%;height:100%;"><img src="images/tomori-attack.png" style="max-height:80vh;"><img src="images/soyo-attack.jpg" style="max-height:80vh;"><img src="images/anon-attack.jpg" style="max-height:80vh;"></div>';sc.classList.add('show');setTimeout(()=>{document.getElementById('jumpscare').classList.remove('show');document.getElementById('jumpscare').innerHTML='<img>';backToMenu();},3000);}
+function showLevelSelect(){document.getElementById('level-select').style.display='flex';}
+function hideLevelSelect(){document.getElementById('level-select').style.display='none';}
+function chooseNight(){const n=prompt("选择关卡 (1-5):");const num=parseInt(n);if(num>=1&&num<=5)startGame(num);}
+function backToMenu(){gameRunning=false;clearInterval(hourTimer);clearInterval(aiTimer);document.getElementById('end-screen').classList.remove('show','gameover','victory');document.getElementById('jumpscare').classList.remove('show');document.getElementById('custom-night').style.display='none';document.getElementById('level-select').style.display='none';hour=0;doorL=doorR=false;lightL=lightR=false;camOpen=false;brokenCams.clear();Object.keys(chars).forEach(k=>{chars[k].pos=0;});chars.anon.active=(currentNight===6);chars.soyo.active=true;anonStage=0;anonFrozenUntil=0;anonStage3Played=false;anonRunning=false;document.getElementById('cam-overlay').classList.remove('show');updateDoors();document.getElementById('start-menu').classList.add('show');const mm=document.getElementById('menu-music');mm.currentTime=0;mm.loop=true;mm.play().catch(()=>{});}
+function previewScare(name){initAudio();if(name==='soyo'){const a=new Audio('sound/soyo-scare.mp3');a.volume=0.9;a.play();}else if(name==='anon'){const a=new Audio('sound/anon-scare.mp3');a.volume=0.9;a.play();}else{const a=new Audio('sound/tomori-scare.mp3');a.volume=0.9;a.play();}const sc=document.getElementById('jumpscare');sc.querySelector('img').src=chars[name].scare||chars[name].path;sc.classList.add('show');const back=()=>{sc.classList.remove('show');sc.removeEventListener('click',back);};sc.addEventListener('click',back);setTimeout(back,3000);}
+let fanNode=null;
+function startFanNoise(){initAudio();if(fanNode)return;const ctx=audioCtx;const size=ctx.sampleRate*2;const buf=ctx.createBuffer(1,size,ctx.sampleRate);const data=buf.getChannelData(0);for(let i=0;i<size;i++)data[i]=(Math.random()*2-1)*0.3;const noise=ctx.createBufferSource();noise.buffer=buf;noise.loop=true;const filter=ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=300;const gain=ctx.createGain();gain.gain.value=0.15;const hum=ctx.createOscillator();hum.type='sawtooth';hum.frequency.value=60;const hg=ctx.createGain();hg.gain.value=0.03;noise.connect(filter).connect(gain).connect(ctx.destination);hum.connect(hg).connect(ctx.destination);noise.start();hum.start();fanNode={noise,hum,gain};}
+buildCamMap();setupControls();
 document.getElementById('start-menu').classList.add('show');
-// auto-play menu music via Web Audio (bypasses autoplay policy on file://)
-const mm = document.getElementById('menu-music');
-mm.volume = 0.6;
-mm.play().catch(()=>{});
-// also try Web Audio approach
-let menuAudioCtx = new (window.AudioContext||window.webkitAudioContext)();
-fetch('sound/menu-music.mp3')
-  .then(r => r.arrayBuffer())
-  .then(buf => menuAudioCtx.decodeAudioData(buf))
-  .then(decoded => {
-    const src = menuAudioCtx.createBufferSource();
-    src.buffer = decoded;
-    src.loop = true;
-    const gain = menuAudioCtx.createGain();
-    gain.gain.value = 0.6;
-    src.connect(gain).connect(menuAudioCtx.destination);
-    src.start();
-    // pause HTML5 audio, use Web Audio instead
-    mm.pause();
-  })
-  .catch(()=>{});
-// unlock on any interaction
-const unlock = () => { menuAudioCtx.resume(); mm.play().catch(()=>{}); };
-window.addEventListener('pointerdown', unlock, { once: true });
-window.addEventListener('mousemove', unlock, { once: true });
-window.addEventListener('keydown', unlock, { once: true });
+const mm=document.getElementById('menu-music');mm.volume=0.6;mm.play().catch(()=>{});
 </script>
 </body>
 </html>
